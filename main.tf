@@ -12,7 +12,8 @@ resource "aws_lambda_function" "this" {
   environment {
     variables = {
       REGION            = var.region
-      KMS_KEY_ID        = module.kms_key.key_arn
+      KMS_KEY_ID        = module.kms_key.key_arn,
+      RETENTION_DAYS    = var.db_snapshot_retention_days
     }
   }
 }
@@ -41,7 +42,11 @@ resource "aws_iam_policy" "this" {
         "rds:DescribeDBClusterSnapshots",
         "rds:DescribeDBClusterSnapshotAttributes",
         "rds:ModifyDBClusterSnapshotAttribute",
-        "rds:CopyDBClusterSnapshot"
+        "rds:CopyDBClusterSnapshot",
+        "rds:CopyDBClusterSnapshot",
+        "rds:AddTagsToResource",
+        "rds:DeleteDBClusterSnapshot",
+        "rds:ListTagsForResource"
       ],
       "Resource": ["*"]
     },
