@@ -118,7 +118,7 @@ data "aws_iam_policy_document" "sns" {
   statement {
     sid = "1"
     effect = "Allow"
-    actions = [ 
+    actions = [
       "SNS:GetTopicAttributes",
       "SNS:SetTopicAttributes",
       "SNS:AddPermission",
@@ -129,7 +129,7 @@ data "aws_iam_policy_document" "sns" {
       "SNS:Publish",
       "SNS:Receive",
     ]
-    
+
     condition {
       test     = "StringEquals"
       variable = "AWS:SourceOwner"
@@ -148,14 +148,14 @@ data "aws_iam_policy_document" "sns" {
   statement {
     sid = "2"
     effect = "Allow"
-    actions = [ 
+    actions = [
       "SNS:Publish",
     ]
 
     principals {
       type        = "AWS"
       identifiers = formatlist(
-        "arn:aws:iam::%s:root", 
+        "arn:aws:iam::%s:root",
         var.source_account_ids
       )
     }
@@ -167,12 +167,12 @@ data "aws_iam_policy_document" "sns" {
 
     resources = ["*"]
   }
-  
+
 }
 
 module "kms_key" {
-  source  = "lablabs/kms-key/aws"
-  version = "0.4.0"
+  source  = "cloudposse/kms-key/aws"
+  version = "0.9.1"
 
   name                    = var.lambda_name
   description             = "KMS key for Aurora snapshots"
@@ -189,14 +189,14 @@ data "aws_iam_policy_document" "kms" {
   statement {
     sid    = "AllowSnapshotCopy"
     effect = "Allow"
-    actions = [    
+    actions = [
       "kms:CreateGrant",
       "kms:DescribeKey"
     ]
 
     resources = ["*"]
 
-    
+
     principals {
       identifiers = ["lambda.amazonaws.com"]
       type        = "Service"
